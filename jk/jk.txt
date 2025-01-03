@@ -1,0 +1,4 @@
+01/01/2025|test|Happy|test|Active|null
+14/01/2025|hello test|Sad|emememmemee```ekekee|Active|null
+01/02/2025|wwwww|Happy|wwwwwww|Active|null
+31/12/2024|wwww|Sad|ww|Recycled|04/01/2025
