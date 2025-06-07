@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Car POV Map - Mapbox GL JS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; }
+    #map { width: 100%; height: 100vh; }
+    .car-marker {
+      width: 40px;
+      height: 40px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/34/Red_Arrow_Up.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      transform-origin: center center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  // Replace with your own Mapbox access token
+  mapboxgl.accessToken = 'pk.eyJ1Ijoic2t5ZTEyOSIsImEiOiJjbWJrdHZ3OXYwdTZxMmxwdjFqNjBqc2psIn0.ScnyAu71F8xdxE7Z9N49iA';
+
+  // Initial coordinates (KL city center)
+  const initial = [101.6869, 3.1390]; // [lng, lat]
+
+  // Create the Mapbox map
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: initial,
+    zoom: 16,
+    pitch: 60,    // Tilt map to simulate driver view
+    bearing: 0,   // North-facing initially
+  });
+
+  // Add navigation controls
+  map.addControl(new mapboxgl.NavigationControl());
+
+  // Create a custom car marker element
+  const carEl = document.createElement('div');
+  carEl.className = 'car-marker';
+
+  // Create the marker
+  const marker = new mapboxgl.Marker(carEl)
+    .setLngLat(initial)
+    .addTo(map);
+
+  // Function to update car position and rotation (heading degrees)
+  function updateCar(lng, lat, heading) {
+    marker.setLngLat([lng, lat]);
+    carEl.style.transform = `rotate(${heading}deg)`;
+    map.easeTo({
+      center: [lng, lat],
+      bearing: heading,
+      pitch: 60,
+      duration: 1000
+    });
+  }
+
+  // Demo simulation: move east and turn gradually
+  let heading = 0;
+  let lng = initial[0];
+  let lat = initial[1];
+
+  function simulateMovement() {
+    lng += 0.0001;
+    heading = (heading + 5) % 360;
+    updateCar(lng, lat, heading);
+  }
+
+  // Start simulation every 2 seconds
+  setInterval(simulateMovement, 2000);
+
+</script>
+
+</body>
+</html>
